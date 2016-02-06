@@ -67,6 +67,19 @@ sourceJar {
     exclude 'org/spongepowered/**'
 }
 
+javadoc {
+    exclude 'org/spongepowered/**'
+}
+
+task javadocJar(type: Jar, dependsOn: 'javadoc') {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+}
+
 apply plugin: 'maven'
 
 uploadArchives {
