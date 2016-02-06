@@ -31,7 +31,6 @@ version = '0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
-
 configurations {
     provided
 }
@@ -50,6 +49,10 @@ minecraft {
 
 dependencies {
     provided 'org.spongepowered:spongeapi:3.0.0'
+}
+
+processResources {
+    from 'LICENSE'
 }
 
 jar {

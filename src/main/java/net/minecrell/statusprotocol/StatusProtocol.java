@@ -1,4 +1,5 @@
 /*
+ * StatusProtocol
  * Copyright (c) 2016, Minecrell <https://github.com/Minecrell>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
