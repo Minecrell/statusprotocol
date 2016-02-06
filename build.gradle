@@ -25,6 +25,7 @@ plugins {
 apply plugin: 'net.minecrell.vanilla.server.library'
 
 group = 'net.minecrell'
+description = 'Simple Sponge plugin extending the status ping API with internal protocol versions'
 version = '0.1-SNAPSHOT'
 
 sourceCompatibility = '1.8'
