@@ -1,0 +1,111 @@
+// Gradle plugins
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = 'forge'
+            url = 'http://files.minecraftforge.net/maven'
+        }
+        maven {
+            name = 'minecrell'
+            url = 'http://repo.minecrell.net/releases'
+        }
+    }
+
+    dependencies {
+        classpath 'net.minecrell:VanillaGradle:2.0.3_1'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-20160116.192356-17'
+    }
+}
+
+plugins {
+    id 'com.github.hierynomus.license' version '0.11.0'
+}
+
+apply plugin: 'net.minecrell.vanilla.server.library'
+
+group = 'net.minecrell'
+version = '0.1-SNAPSHOT'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+
+configurations {
+    provided
+}
+
+repositories {
+    maven {
+        name = 'sponge'
+        url = 'http://repo.spongepowered.org/maven'
+    }
+}
+
+minecraft {
+    version = '1.8.9'
+    mappings = 'stable_20'
+}
+
+dependencies {
+    provided 'org.spongepowered:spongeapi:3.0.0'
+}
+
+jar {
+    exclude 'org/spongepowered/**'
+}
+
+reobf.jar {
+    mappingType = 'SEARGE'
+}
+
+sourceJar {
+    exclude 'org/spongepowered/**'
+}
+
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: 'file://localhost' +
+                    (System.getenv('REPO_' + (version.endsWith('-SNAPSHOT') ? 'SNAPSHOTS' : 'RELEASES')) ?: "$buildDir.absolutePath/repo"))
+        }
+    }
+}
+
+tasks.withType(Upload) {
+    dependsOn 'reobfJar'
+}
+
+license {
+    header rootProject.file('LICENSE')
+    include '**/*.java'
+
+    strictCheck true
+    mapping {
+        java = 'SLASHSTAR_STYLE'
+    }
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+    }
+}
+
+eclipse {
+    classpath {
+        plusConfigurations += [configurations.provided]
+    }
+}
+
+idea {
+    module {
+        scopes.PROVIDED.plus += [configurations.provided]
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.10'
+}
