@@ -16,10 +16,10 @@ You can download the plugin from [GitHub releases](https://github.com/Minecrell/
     }
     
     dependencies {
-        compile 'net.minecrell:statusprotocol:0.1'
+        compile 'net.minecrell:statusprotocol:0.2'
     }
     ```
-2. Add an (optional) dependency on statusprotocol.
+2. Add an (optional) dependency on `net.minecrell.statusprotocol`.
 3. Access the protocol version on status ping or set it:
 
     ```java
