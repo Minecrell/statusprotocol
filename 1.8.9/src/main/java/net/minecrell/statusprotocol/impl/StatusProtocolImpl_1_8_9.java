@@ -21,10 +21,9 @@
  * THE SOFTWARE.
  */
 
-package net.minecrell.statusprotocol.impl.v1_8_9;
+package net.minecrell.statusprotocol.impl;
 
 import net.minecraft.network.ServerStatusResponse;
-import net.minecrell.statusprotocol.impl.StatusProtocolImpl;
 import org.spongepowered.api.MinecraftVersion;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.StatusResponse;

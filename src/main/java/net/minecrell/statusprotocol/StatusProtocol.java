@@ -27,8 +27,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import com.google.inject.Inject;
+import net.minecrell.statusprotocol.impl.MinecraftStatusProtocolImpl;
 import net.minecrell.statusprotocol.impl.StatusProtocolImpl;
-import net.minecrell.statusprotocol.impl.v1_8_9.StatusProtocolImpl_1_8_9;
 import org.slf4j.Logger;
 import org.spongepowered.api.MinecraftVersion;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
@@ -57,12 +57,29 @@ public final class StatusProtocol {
     private static boolean failedStatusSetVersion;
 
     @Inject
-    public StatusProtocol(Logger logger) {
+    public StatusProtocol(Logger logger, MinecraftVersion version) {
         checkState(instance == null, "Instance was already initialized");
         instance = this;
 
         this.logger = logger;
-        this.impl = new StatusProtocolImpl_1_8_9();
+
+        StatusProtocolImpl impl = null;
+        MinecraftStatusProtocolImpl mcImpl = MinecraftStatusProtocolImpl.find(version, logger);
+        if (mcImpl != null) {
+            try {
+                impl = mcImpl.construct();
+            } catch (Throwable e) {
+                logger.error("Failed to initialize statusprotocol implementation for Minecraft {}. The plugin will be disabled",
+                        mcImpl.getTarget(), e);
+            }
+        }
+
+        this.impl = impl;
+        if (impl == null) {
+            failedMinecraftProtocolVersion = true;
+            failedStatusProtocolVersion = true;
+            failedStatusSetVersion = true;
+        }
     }
 
     /**

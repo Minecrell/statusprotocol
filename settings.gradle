@@ -1,1 +1,4 @@
 rootProject.name = 'statusprotocol'
+include '1.8.9', '1.9'
+rootProject.children.each { it.name = "$rootProject.name-$it.name" }
+

@@ -1,62 +1,74 @@
-// Gradle plugins
-buildscript {
-    repositories {
-        jcenter()
-        maven {
-            name = 'forge'
-            url = 'http://files.minecraftforge.net/maven'
-        }
-        maven {
-            name = 'minecrell'
-            url = 'http://repo.minecrell.net/releases'
-        }
-    }
-
-    dependencies {
-        classpath 'net.minecrell:VanillaGradle:2.0.3_1'
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-20160116.192356-17'
-    }
-}
-
 plugins {
     id 'org.spongepowered.plugin' version '0.5.1'
     id 'nebula.provided-base' version '3.0.3'
     id 'net.minecrell.licenser' version '0.1.5'
 }
 
-apply plugin: 'net.minecrell.vanilla.server.library'
-
 group = 'net.minecrell'
 description = 'Simple Sponge plugin extending the status ping API with internal protocol versions'
 version = '0.2-SNAPSHOT'
 
-minecraft {
-    version = '1.8.9'
-    mappings = 'stable_22'
-}
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'nebula.provided-base'
 
-dependencies {
-    provided 'org.spongepowered:spongeapi:4.0.3'
+    version = '0.2-SNAPSHOT'
+
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+
+    repositories {
+        mavenCentral()
+        maven {
+            name = 'sponge'
+            url = 'http://repo.spongepowered.org/maven'
+        }
+    }
+
+    dependencies {
+        provided 'org.spongepowered:spongeapi:4.0.3'
+    }
 }
 
 processResources {
     from 'LICENSE'
 }
 
-jar {
-    exclude 'org/spongepowered/**'
+subprojects.each {
+    evaluationDependsOn it.path
 }
 
-reobf.jar {
-    mappingType = 'SEARGE'
+subprojects {
+    group = 'net.minecrell.statusprotocol'
+
+    dependencies {
+        compile rootProject
+    }
+
+    reobf.jar {
+        mappingType = 'SEARGE'
+    }
 }
 
-sourceJar {
+task implJar(type: Jar, dependsOn: 'jar') {
+    from sourceSets.main.output
+
     exclude 'org/spongepowered/**'
+    subprojects.each {
+        dependsOn it.tasks.reobfJar
+        from zipTree(it.tasks.jar.archivePath)
+    }
 }
 
-javadoc {
+task sourceJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+
     exclude 'org/spongepowered/**'
+    subprojects.each {
+        dependsOn it.tasks.sourceJar
+        from zipTree(it.tasks.sourceJar.archivePath)
+    }
 }
 
 task javadocJar(type: Jar, dependsOn: 'javadoc') {
@@ -65,22 +77,24 @@ task javadocJar(type: Jar, dependsOn: 'javadoc') {
 }
 
 artifacts {
-    archives javadocJar
+    archives implJar
 }
 
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: 'file://localhost' +
-                    (System.getenv('REPO_' + (version.endsWith('-SNAPSHOT') ? 'SNAPSHOTS' : 'RELEASES')) ?: "$buildDir.absolutePath/repo"))
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifacts = [implJar, sourceJar, javadocJar]
+
+            repositories {
+                maven {
+                    url = System.getenv('REPO_' + (version.endsWith('-SNAPSHOT') ? 'SNAPSHOTS' : 'RELEASES')) ?: "$rootProject.buildDir/repo"
+                }
+            }
         }
     }
-}
-
-tasks.withType(Upload) {
-    dependsOn 'reobfJar'
 }
 
 license {
