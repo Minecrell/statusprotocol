@@ -20,6 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package net.minecrell.statusprotocol;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -44,7 +45,7 @@ import java.util.OptionalInt;
  * <p>You should always use this in a way it is completely optional,
  * as it may break easily with every Minecraft version.</p>
  */
-@Plugin(id = "statusprotocol", name = "StatusProtocol", version = "0.1-SNAPSHOT")
+@Plugin(id = "net.minecrell.statusprotocol", name = "StatusProtocol")
 public final class StatusProtocol {
 
     private static StatusProtocol instance;
