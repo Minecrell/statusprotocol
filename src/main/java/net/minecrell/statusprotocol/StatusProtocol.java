@@ -45,7 +45,7 @@ import java.util.OptionalInt;
  * <p>You should always use this in a way it is completely optional,
  * as it may break easily with every Minecraft version.</p>
  */
-@Plugin(id = "net.minecrell.statusprotocol", name = "StatusProtocol")
+@Plugin(id = "statusprotocol", name = "StatusProtocol")
 public final class StatusProtocol {
 
     private static StatusProtocol instance;

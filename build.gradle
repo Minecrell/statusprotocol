@@ -1,6 +1,6 @@
 plugins {
-    id 'org.spongepowered.plugin' version '0.5.1'
-    id 'nebula.provided-base' version '3.0.3'
+    id 'org.spongepowered.plugin' version '0.5.2'
+    id 'nebula.provided-base' version '3.1.0'
     id 'net.minecrell.licenser' version '0.1.5'
 }
 
@@ -13,8 +13,11 @@ allprojects {
 
     version = '0.3-SNAPSHOT'
 
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
+    // Why is ForgeGradle messing with this!?
+    afterEvaluate {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 
     repositories {
         mavenCentral()
@@ -97,7 +100,7 @@ publishing {
 }
 
 license {
-    header rootProject.file('LICENSE')
+    header = rootProject.file('LICENSE')
     include '**/*.java'
 }
 

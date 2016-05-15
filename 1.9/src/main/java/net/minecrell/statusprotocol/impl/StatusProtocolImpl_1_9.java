@@ -45,7 +45,7 @@ public final class StatusProtocolImpl_1_9 implements StatusProtocolImpl {
     @Override
     public OptionalInt getProtocolVersion(StatusResponse response) {
         if (response instanceof ServerStatusResponse) {
-            return OptionalInt.of(((ServerStatusResponse) response).getProtocolVersionInfo().getProtocol());
+            return OptionalInt.of(((ServerStatusResponse) response).getVersion().getProtocol());
         } else {
             return OptionalInt.empty();
         }
@@ -54,7 +54,7 @@ public final class StatusProtocolImpl_1_9 implements StatusProtocolImpl {
     @Override
     public boolean setVersion(ClientPingServerEvent.Response response, String name, int protocol) {
         if (response instanceof ServerStatusResponse) {
-            ((ServerStatusResponse) response).setProtocolVersionInfo(new ServerStatusResponse.Version(name, protocol));
+            ((ServerStatusResponse) response).setVersion(new ServerStatusResponse.Version(name, protocol));
             return true;
         } else {
             return false;

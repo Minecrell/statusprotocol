@@ -22,5 +22,5 @@ apply plugin: 'net.minecrell.vanilla.server.library'
 
 minecraft {
     version = '1.9'
-    mappings = 'snapshot_20160313'
+    mappings = 'snapshot_20160515'
 }
