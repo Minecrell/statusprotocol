@@ -16,7 +16,7 @@ You can download the plugin from [GitHub releases](https://github.com/Minecrell/
     }
     
     dependencies {
-        compile 'net.minecrell:statusprotocol:0.2'
+        compile 'net.minecrell:statusprotocol:0.3'
     }
     ```
 2. Add an (optional) dependency on `net.minecrell.statusprotocol`.
